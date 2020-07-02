@@ -1,120 +1,161 @@
 <template>
-  <div>
-    <v-navigation-drawer app clipped right>
-      <v-list dense>
-        <v-list-item @click.stop="right = !right">
-          <v-list-item-content>
-            <v-list-item-title>Thêm nhóm ngành</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-      <v-form ref="form" v-model="valid" lazy-validation>
-        <v-text-field
-          v-model="name"
-          :counter="256"
-          :rules="nameRules"
-          label="Tên nhóm ngành"
-          required
-        ></v-text-field>
-        <v-btn :disabled="!valid" color="success" class="mr-4" @click="add">Thêm</v-btn>
-      </v-form>
-    </v-navigation-drawer>
-    <v-data-table :headers="headers" :items="groups">
-      <template v-slot:item.name="props">
-        <v-edit-dialog
-          :return-value.sync="props.item.name"
-          @save="save(props.item.id, props.item.name)"
-          @close="close"
-        >
-          {{ props.item.name }}
-          <template v-slot:input>
-            <v-text-field
-              v-model="props.item.name"
-              :rules="[max256chars]"
-              label="Edit"
-              single-line
-              counter
-            ></v-text-field>
-          </template>
-        </v-edit-dialog>
-      </template>
-      <template v-slot:item.createdAt="props">{{formatDay(props.item.createdAt)}}</template>
-      <template v-slot:item.detele="props">
-        <span v-on:click="deleteNganh(props.item.id)">
-          <v-icon class="icon-delete">mdi-delete</v-icon>
-        </span>
-      </template>
-    </v-data-table>
+  <div id="app">
+    <v-app id="inspire">
+      <div>
+        <v-toolbar flat color="white">
+          <v-toolbar-title>Thông Tin</v-toolbar-title>
+          <v-divider class="mx-2" inset vertical></v-divider>
+          <v-spacer></v-spacer>
+          <v-dialog v-model="dialogAdd" max-width="500px">
+            <template v-slot:activator="{ on }">
+              <v-btn
+                color="primary"
+                dark
+                class="mb-2"
+                v-on="on"
+                v-on:click="dialogAdd = true"
+              >Thêm Nhóm Ngành Mới</v-btn>
+            </template>
+            <v-card>
+              <v-card-title>
+                <span class="headline">Thêm Nhóm Ngành Mới</span>
+              </v-card-title>
 
-    <v-snackbar v-model="snack" :timeout="3000" :color="snackColor">
-      {{ snackText }}
-      <template v-slot:action="{ attrs }">
-        <v-btn v-bind="attrs" text @click="snack = false">Close</v-btn>
-      </template>
-    </v-snackbar>
+              <v-card-text>
+                <v-container grid-list-md>
+                  <v-layout wrap>
+                    <v-text-field v-model="addedItem.name" label="Tên nhóm ngành" autofocus></v-text-field>
+                  </v-layout>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" @click="close">Hủy</v-btn>
+                <v-btn color="blue darken-1" @click="save">Lưu</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <v-dialog v-model="dialogEdit" max-width="500px">
+            <v-card>
+              <v-card-title>
+                <span class="headline">Sửa nhóm ngành</span>
+              </v-card-title>
+
+              <v-card-text>
+                <v-container grid-list-md>
+                  <v-layout wrap>
+                    <v-text-field v-model="editedItem.name" label="Tên nhóm ngành" autofocus></v-text-field>
+                  </v-layout>
+                </v-container>
+              </v-card-text>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" @click="close">Hủy</v-btn>
+                <v-btn color="blue darken-1" @click="save">Lưu</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
+        <v-data-table :headers="headers" :items="dataNhomNganh" class="elevation-1">
+          <template v-slot:item.description="props">
+            <span class="truncate">{{props.item.description | truncate(100)}}</span>
+          </template>
+          <template v-slot:item.createdAt="props">
+            <span class="truncate">{{formatDay(props.item.createdAt)}}</span>
+          </template>
+          <template v-slot:item.action="props">
+            <v-icon
+              v-on:click="dialogEdit = true;
+              editedItem.name = props.item.name;
+              editedItem.id = props.item.id;"
+              class="icon-edit"
+            >mdi-table-edit</v-icon>
+            <v-icon v-on:click="deleteItem(props.item.id,)" class="icon-delete">mdi-delete</v-icon>
+          </template>
+        </v-data-table>
+      </div>
+    </v-app>
   </div>
 </template>
-
 <script>
 import axios from "axios";
 import moment from "moment";
 export default {
   name: "comp-nhomnganh",
 
-  data() {
-    return {
-      valid: true,
+  data: () => ({
+    dialogAdd: false,
+    dialogEdit: false,
+    headers: [
+      // { text: "Mã Nhóm Ngành", value: "id" },
+      {
+        text: "Tên Nhóm Ngành",
+        align: "left",
+        sortable: false,
+        value: "name"
+      },
+      { text: "Ngày Tạo", value: "createdAt" },
+      {
+        text: "Action",
+        align: "end",
+        value: "action"
+      }
+    ],
+    dataNhomNganh: [],
+    addedItem: {
+      name: ""
+    },
+    editedItem: {
+      id: "",
+      name: ""
+    },
+    defaultItem: {
+      id: "",
       name: "",
-      nameRules: [
-        v => !!v || "Vui long nhập nhóm ngành",
-        v => (v && v.length <= 256) || "Name must be less than 10 characters"
-      ],
-      snack: false,
-      snackColor: "",
-      snackText: "",
-      max256chars: v => v.length <= 256 || "Input too long!",
-      search: "",
-      headers: [
-        {
-          text: "Name",
-          align: "start",
-          value: "name"
-        },
-        {
-          text: "Create at",
-          align: "center",
-          value: "createdAt"
-        },
-        {
-          text: "Action",
-          align: "end",
-          value: "detele"
-        }
-      ],
-      groups: []
-    };
-  },
-  mounted() {
-    axios
-      .get("http://108.160.141.154:3000/group", {
-        headers: {
-          Authorization: "Bearer " + this.$cookies.get("cookToken")
-        }
-      })
-      .then(response => {
-        this.groups = response.data;
-        // console.log(this.$cookies.get("cookToken"));
-        // console.log(this.groups);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+      createdAt: ""
+    }
+  }),
+  created() {
+    this.initialize();
   },
   methods: {
-    validate() {
-      this.$refs.form.validate();
+    initialize() {
+      axios
+        .get("http://108.160.141.154:3000/group", {
+          headers: {
+            Authorization: "Bearer " + this.$cookies.get("cookToken")
+          }
+        })
+        .then(response => {
+          this.dataNhomNganh = response.data;
+          // console.log(this.$cookies.get("cookToken"));
+          // console.log(this.groups);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     },
-    deleteNganh(id) {
+    addItem() {
+      axios
+        .post(
+          "http://108.160.141.154:3000/group",
+          { name: this.addedItem.name },
+          {
+            headers: {
+              Authorization: "Bearer " + this.$cookies.get("cookToken")
+            }
+          }
+        )
+        .then(response => {
+          this.dataNhomNganh.push(response.data);
+          this.name = "";
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    deleteItem(id) {
       // console.log(id);
       axios
         .delete("http://108.160.141.154:3000/group", {
@@ -124,7 +165,9 @@ export default {
           params: { id }
         })
         .then(() => {
-          this.groups = this.groups.filter(item => item.id !== id);
+          this.dataNhomNganh = this.dataNhomNganh.filter(
+            item => item.id !== id
+          );
           // console.log(this.$cookies.get("cookToken"));
           // console.log(this.groups);
         })
@@ -132,7 +175,8 @@ export default {
           console.log(error);
         });
     },
-    save(id, name) {
+
+    editItem(id, name) {
       axios
         .put(
           "http://108.160.141.154:3000/group",
@@ -145,7 +189,7 @@ export default {
           }
         )
         .then(() => {
-          this.groups = this.groups.map(item => {
+          this.dataNhomNganh = this.dataNhomNganh.map(item => {
             if (item.id === id) {
               return {
                 ...item,
@@ -154,38 +198,31 @@ export default {
             }
             return item;
           });
-          this.snack = true;
-          this.snackColor = "success";
-          this.snackText = "Data saved";
         })
         .catch(error => {
           console.log(error);
         });
     },
-    close() {
-      console.log("Dialog closed");
+
+    save() {
+      // console.log(this.dialogAdd);
+      if (this.dialogAdd === true) {
+        this.addItem();
+      } else {
+        this.editItem(this.editedItem.id, this.editedItem.name);
+      }
+      this.close();
     },
     formatDay(d) {
       return moment(d).format("DD-MM-YYYY HH:mm:ss");
     },
-    add() {
-      axios
-        .post(
-          "http://108.160.141.154:3000/group",
-          { name: this.name },
-          {
-            headers: {
-              Authorization: "Bearer " + this.$cookies.get("cookToken")
-            }
-          }
-        )
-        .then(response => {
-          this.groups.push(response.data);
-          this.name = "";
-        })
-        .catch(error => {
-          console.log(error);
-        });
+    close() {
+      this.dialogAdd = false;
+      this.dialogEdit = false;
+      setTimeout(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.addedItem = Object.assign({}, this.defaultItem);
+      }, 300);
     }
   }
 };
@@ -194,6 +231,11 @@ export default {
 <style>
 .icon-delete:hover {
   color: red;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.icon-edit:hover {
+  color: blue;
   cursor: pointer;
   transition: all 0.3s ease;
 }
