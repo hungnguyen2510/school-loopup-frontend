@@ -58,11 +58,8 @@
           </v-dialog>
         </v-toolbar>
         <v-data-table :headers="headers" :items="dataNhomNganh" class="elevation-1">
-          <template v-slot:item.description="props">
-            <span class="truncate">{{props.item.description | truncate(100)}}</span>
-          </template>
           <template v-slot:item.createdAt="props">
-            <span class="truncate">{{formatDay(props.item.createdAt)}}</span>
+            <span>{{formatDay(props.item.createdAt)}}</span>
           </template>
           <template v-slot:item.action="props">
             <v-icon
@@ -155,25 +152,24 @@ export default {
           console.log(error);
         });
     },
-    deleteItem(id) {
+    deleteItem(id, name) {
       // console.log(id);
-      axios
-        .delete("http://108.160.141.154:3000/group", {
-          headers: {
-            Authorization: "Bearer " + this.$cookies.get("cookToken")
-          },
-          params: { id }
-        })
-        .then(() => {
-          this.dataNhomNganh = this.dataNhomNganh.filter(
-            item => item.id !== id
-          );
-          // console.log(this.$cookies.get("cookToken"));
-          // console.log(this.groups);
-        })
-        .catch(error => {
-          console.log(error);
-        });
+      confirm("Bạn có muốn xóa ngành?" + " " + name) &&
+        axios
+          .delete("http://108.160.141.154:3000/group", {
+            headers: {
+              Authorization: "Bearer " + this.$cookies.get("cookToken")
+            },
+            params: { id }
+          })
+          .then(() => {
+            this.dataNhomNganh = this.dataNhomNganh.filter(
+              item => item.id !== id
+            );
+          })
+          .catch(error => {
+            console.log(error);
+          });
     },
 
     editItem(id, name) {
