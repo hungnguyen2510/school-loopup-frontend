@@ -23,12 +23,25 @@
 
               <v-card-text>
                 <v-container grid-list-md>
-                  <v-layout wrap>
-                    <v-text-field v-model="addedItem.name" label="Tên ngành" autofocus></v-text-field>
-                    <v-text-field v-model="addedItem.code" label="Mã ngành" autofocus></v-text-field>
-                  </v-layout>
+                  <v-text-field v-model="addedItem.code" label="Mã ngành" autofocus></v-text-field>
+                  <v-text-field v-model="addedItem.name" label="Tên ngành"></v-text-field>
+                  <label>Chọn nhóm ngành:</label>
+                  <select v-model="addedItem.groupId" style="border:1px solid #ccc;padding:5px">
+                    <option
+                      v-for="(item,index) in dataNhomNganh"
+                      v-bind:value="item.value"
+                      v-bind:key="index"
+                    >{{ item.text }}</option>
+                  </select>
+                  <v-textarea
+                    v-model="addedItem.description"
+                    label="Mô tả ngành"
+                    row-height="50"
+                    auto-grow
+                  ></v-textarea>
                 </v-container>
               </v-card-text>
+
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" @click="close">Hủy</v-btn>
@@ -43,10 +56,48 @@
               </v-card-title>
 
               <v-card-text>
-                <v-container grid-list-md>
-                  <v-layout wrap>
-                    <v-text-field v-model="editedItem.name" label="Tên nhóm ngành" autofocus></v-text-field>
-                  </v-layout>
+                <v-container>
+                  <v-row>
+                    <v-col>
+                      <v-text-field v-model="editedItem.id" label="ID ngành" disabled></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <!-- <v-text-field v-model="editedItem.groupId" label="GroupID" disabled></v-text-field> -->
+                      <label>Chọn nhóm ngành:</label>
+                      <select
+                        v-model="editedItem.groupId"
+                        style="border:1px solid #ccc;padding:5px"
+                      >
+                        <option
+                          v-for="(item,index) in dataNhomNganh"
+                          v-bind:value="item.value"
+                          v-bind:key="index"
+                        >{{ item.text }}</option>
+                      </select>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-text-field v-model="editedItem.code" label="Mã ngành" autofocus></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-text-field v-model="editedItem.name" label="Tên ngành"></v-text-field>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col>
+                      <v-textarea
+                        v-model="editedItem.description"
+                        label="Mô tả ngành"
+                        auto-grow
+                        row-height="50"
+                      ></v-textarea>
+                    </v-col>
+                  </v-row>
                 </v-container>
               </v-card-text>
 
@@ -64,15 +115,18 @@
           </template>
           <template v-slot:item.action="props">
             <v-icon
+              v-on:click="dialogEdit = true;
+              editedItem.id = props.item.id;
+              editedItem.groupId = props.item.groupId;
+              editedItem.code = props.item.code;
+              editedItem.name = props.item.name;
+              editedItem.description = props.item.description;"
+              class="icon-edit"
+            >mdi-table-edit</v-icon>
+            <v-icon
               v-on:click="deleteItem(props.item.id,props.item.name)"
               class="icon-delete"
             >mdi-delete</v-icon>
-            <v-icon
-              v-on:click="dialogEdit = true;
-              editedItem.name = props.item.name;
-              editedItem.id = props.item.id;"
-              class="icon-delete"
-            >mdi-table-edit</v-icon>
           </template>
         </v-data-table>
       </div>
@@ -97,7 +151,7 @@ export default {
         sortable: false,
         value: "name"
       },
-      { text: "Mã Nhóm Ngành", value: "groupId" },
+      { text: "Tên Nhóm Ngành", value: "groupName" },
       { text: "Mô Tả", value: "description" },
       {
         text: "Action",
@@ -106,6 +160,7 @@ export default {
       }
     ],
     dataNganh: [],
+    dataNhomNganh: [],
     addedItem: {
       name: "",
       code: "",
@@ -129,6 +184,7 @@ export default {
 
   created() {
     this.initialize();
+    this.getThongTinNhomNganh();
   },
 
   methods: {
@@ -146,17 +202,34 @@ export default {
           console.log(error);
         });
     },
-    addItem() {
+    getThongTinNhomNganh() {
       axios
-        .post(
-          "http://108.160.141.154:3000/industry",
-          { name: this.addedItem.name },
-          {
-            headers: {
-              Authorization: "Bearer " + this.$cookies.get("cookToken")
-            }
+        .get("http://108.160.141.154:3000/group", {
+          headers: {
+            Authorization: "Bearer " + this.$cookies.get("cookToken")
           }
-        )
+        })
+        .then(response => {
+          this.dataNhomNganh = response.data.map(item => ({
+            text: item.name,
+            value: item.id
+          }));
+          this.addedItem.groupId = response.data[0].id;
+          // console.log(this.dataNhomNganh);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    addItem() {
+      // console.log(this.addedItem);
+      axios
+        .post("http://108.160.141.154:3000/industry", this.addedItem, {
+          headers: {
+            Authorization: "Bearer " + this.$cookies.get("cookToken"),
+            "Content-Type": "application/json"
+          }
+        })
         .then(response => {
           this.dataNganh.push(response.data);
           this.name = "";
@@ -183,11 +256,12 @@ export default {
             console.log(error);
           });
     },
-    editItem(id, name) {
+    editItem(id, groupId, code, name, description) {
+      // console.log(id, groupID, code, name, description);
       axios
         .put(
           "http://108.160.141.154:3000/industry",
-          { name },
+          { name, code, groupId, description },
           {
             headers: {
               Authorization: "Bearer " + this.$cookies.get("cookToken")
@@ -195,12 +269,16 @@ export default {
             params: { id }
           }
         )
-        .then(() => {
+        .then(response => {
           this.dataNganh = this.dataNganh.map(item => {
             if (item.id === id) {
               return {
                 ...item,
-                name
+                name,
+                code,
+                groupName: response.data.groupName,
+                groupId,
+                description
               };
             }
             return item;
@@ -215,7 +293,13 @@ export default {
       if (this.dialogAdd === true) {
         this.addItem();
       } else {
-        this.editItem(this.editedItem.id, this.editedItem.name);
+        this.editItem(
+          this.editedItem.id,
+          this.editedItem.groupId,
+          this.editedItem.code,
+          this.editedItem.name,
+          this.editedItem.description
+        );
       }
       this.close();
     },
@@ -234,6 +318,11 @@ export default {
 <style>
 .icon-delete:hover {
   color: red;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.icon-edit:hover {
+  color: blue;
   cursor: pointer;
   transition: all 0.3s ease;
 }

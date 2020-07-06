@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dark></v-app-bar>
-
     <v-main>
       <!-- <CompSearcher></CompSearcher> -->
       <router-view></router-view>
@@ -18,13 +17,7 @@ export default {
     // CompSearcher
   },
 
-  data: () => ({
-    tabSelected: "Login"
-  }),
-  methods: {
-    changeTab(tab) {
-      this.tabSelected = tab;
-    }
-  }
+  data: () => ({}),
+  methods: {}
 };
 </script>

@@ -4,11 +4,17 @@ import Router from "vue-router";
 import CompManagement from "../components/CompManagement";
 import CompLogin from "../components/CompLogin";
 import CompRegistration from "../components/CompRegister";
+import CompSearch from "../components/CompSearch";
 
 Vue.use(Router);
 
 const router = new Router({
   routes: [
+    {
+      path: "/", ///path của route
+      name: "CompSearch", // tên route
+      component: CompSearch, // component route sử dụng
+    },
     // bao gồm danh sách route
     {
       path: "/management", ///path của route

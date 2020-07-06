@@ -28,15 +28,14 @@
                 </v-form>
               </v-card-text>
               <v-card-actions>
+                <v-alert v-if="checkedErros" type="error" transition="scale-transition">{{errors}}</v-alert>
                 <v-spacer></v-spacer>
                 <!-- <v-btn v-on:click="Login" color="primary">Login</v-btn> -->
                 <v-btn
                   v-on:click="login"
                   class="ma-2"
-                  :loading="loading"
-                  :disabled="loading"
                   color="info"
-                  @click="loader = 'loading4'"
+                  @click="loader = 'loading4'; overlay = !overlay"
                 >
                   Đăng Nhập
                   <template v-slot:loader>
@@ -51,6 +50,9 @@
         </v-row>
       </v-container>
     </v-main>
+    <v-overlay :value="overlay">
+      <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
   </v-app>
 </template>
 <script>
@@ -60,31 +62,30 @@ export default {
   data() {
     return {
       titleForm: "Đăng Nhập",
+      overlay: false,
       username: "",
       password: "",
       tokenAuth: "",
-      loading: false
+      errors: "",
+      checkedErros: false
     };
   },
   watch: {
-    loader() {
-      const l = this.loader;
-      this[l] = !this[l];
-
-      setTimeout(() => (this[l] = false), 3000);
-
-      this.loader = null;
+    overlay(val) {
+      val &&
+        setTimeout(() => {
+          this.overlay = false;
+        }, 3000);
     }
   },
   methods: {
     login() {
-      this.loading = true;
+      this.checkedErros = false;
       var username = this.username;
       var password = this.password;
 
       if (username === "" || password === "") {
         console.log("Vui lòng kiểm tra lại username hoặc password");
-        this.loading = false;
       } else {
         axios
           .post(
@@ -109,8 +110,12 @@ export default {
                 error.response.data &&
                 error.response.data.message) ||
               error.message;
-            console.log(message);
-            this.loading = false;
+            // console.log(message);
+            this.checkedErros = true;
+            this.errors = message;
+            setTimeout(() => {
+              this.checkedErros = false;
+            }, 10000);
           });
       }
     }
