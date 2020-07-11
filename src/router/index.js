@@ -2,6 +2,8 @@ import Vue from "vue";
 //Dòng này để import vue-router
 import Router from "vue-router";
 import CompManagement from "../components/CompManagement";
+import CompNhomNganh from "../components/CompNhomNganh";
+import CompNganh from "../components/CompNganh";
 import CompLogin from "../components/CompLogin";
 import CompRegistration from "../components/CompRegister";
 import CompSearch from "../components/CompSearch";
@@ -20,6 +22,22 @@ const router = new Router({
       path: "/management", ///path của route
       name: "CompManagement", // tên route
       component: CompManagement, // component route sử dụng
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/management/group", ///path của route
+      name: "CompNhomNganh", // tên route
+      component: CompNhomNganh, // component route sử dụng
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/management/industry", ///path của route
+      name: "CompNganh", // tên route
+      component: CompNganh, // component route sử dụng
       meta: {
         requiresAuth: true,
       },

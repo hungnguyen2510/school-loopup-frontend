@@ -1,6 +1,39 @@
 <template>
   <div id="app">
     <v-app id="inspire">
+      <v-app-bar app clipped-right color="primary" dark>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-toolbar-title>LHU Lookup Management</v-toolbar-title>
+        <v-spacer></v-spacer>
+      </v-app-bar>
+      <v-navigation-drawer v-model="drawer" app>
+        <v-list dense>
+          <v-list-item link>
+            <v-list-item-action>
+              <v-icon>mdi-home</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                <router-link class="linkMenu" to="/management/group"
+                  >Danh sách nhóm ngành
+                </router-link>
+              </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item link>
+            <v-list-item-action>
+              <v-icon>mdi-email</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>
+                <router-link class="linkMenu" to="/management/industry"
+                  >Danh sách ngành
+                </router-link></v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-navigation-drawer>
       <div>
         <v-toolbar flat color="white">
           <v-toolbar-title>Thông Tin</v-toolbar-title>
@@ -14,7 +47,8 @@
                 class="mb-2"
                 v-on="on"
                 v-on:click="dialogAdd = true"
-              >Thêm Ngành Mới</v-btn>
+                >Thêm Ngành Mới</v-btn
+              >
             </template>
             <v-card>
               <v-card-title>
@@ -23,15 +57,26 @@
 
               <v-card-text>
                 <v-container grid-list-md>
-                  <v-text-field v-model="addedItem.code" label="Mã ngành" autofocus></v-text-field>
-                  <v-text-field v-model="addedItem.name" label="Tên ngành"></v-text-field>
+                  <v-text-field
+                    v-model="addedItem.code"
+                    label="Mã ngành"
+                    autofocus
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="addedItem.name"
+                    label="Tên ngành"
+                  ></v-text-field>
                   <label>Chọn nhóm ngành:</label>
-                  <select v-model="addedItem.groupId" style="border:1px solid #ccc;padding:5px">
+                  <select
+                    v-model="addedItem.groupId"
+                    style="border:1px solid #ccc;padding:5px"
+                  >
                     <option
-                      v-for="(item,index) in dataNhomNganh"
+                      v-for="(item, index) in dataNhomNganh"
                       v-bind:value="item.value"
                       v-bind:key="index"
-                    >{{ item.text }}</option>
+                      >{{ item.text }}</option
+                    >
                   </select>
                   <v-textarea
                     v-model="addedItem.description"
@@ -59,7 +104,11 @@
                 <v-container>
                   <v-row>
                     <v-col>
-                      <v-text-field v-model="editedItem.id" label="ID ngành" disabled></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.id"
+                        label="ID ngành"
+                        disabled
+                      ></v-text-field>
                     </v-col>
                   </v-row>
                   <v-row>
@@ -71,21 +120,29 @@
                         style="border:1px solid #ccc;padding:5px"
                       >
                         <option
-                          v-for="(item,index) in dataNhomNganh"
+                          v-for="(item, index) in dataNhomNganh"
                           v-bind:value="item.value"
                           v-bind:key="index"
-                        >{{ item.text }}</option>
+                          >{{ item.text }}</option
+                        >
                       </select>
                     </v-col>
                   </v-row>
                   <v-row>
                     <v-col>
-                      <v-text-field v-model="editedItem.code" label="Mã ngành" autofocus></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.code"
+                        label="Mã ngành"
+                        autofocus
+                      ></v-text-field>
                     </v-col>
                   </v-row>
                   <v-row>
                     <v-col>
-                      <v-text-field v-model="editedItem.name" label="Tên ngành"></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.name"
+                        label="Tên ngành"
+                      ></v-text-field>
                     </v-col>
                   </v-row>
                   <v-row>
@@ -111,29 +168,34 @@
         </v-toolbar>
         <v-data-table :headers="headers" :items="dataNganh" class="elevation-1">
           <template v-slot:item.description="props">
-            <span class="truncate">{{props.item.description | truncate(100)}}</span>
+            <span class="truncate">{{
+              props.item.description | truncate(100)
+            }}</span>
           </template>
           <template v-slot:item.action="props">
             <v-icon
-              v-on:click="dialogEdit = true;
-              editedItem.id = props.item.id;
-              editedItem.groupId = props.item.groupId;
-              editedItem.code = props.item.code;
-              editedItem.name = props.item.name;
-              editedItem.description = props.item.description;"
+              v-on:click="
+                dialogEdit = true;
+                editedItem.id = props.item.id;
+                editedItem.groupId = props.item.groupId;
+                editedItem.code = props.item.code;
+                editedItem.name = props.item.name;
+                editedItem.description = props.item.description;
+              "
               class="icon-edit"
-            >mdi-table-edit</v-icon>
+              >mdi-table-edit</v-icon
+            >
             <v-icon
-              v-on:click="deleteItem(props.item.id,props.item.name)"
+              v-on:click="deleteItem(props.item.id, props.item.name)"
               class="icon-delete"
-            >mdi-delete</v-icon>
+              >mdi-delete</v-icon
+            >
           </template>
         </v-data-table>
       </div>
     </v-app>
   </div>
 </template>
-
 
 <script>
 import axios from "axios";
@@ -143,21 +205,22 @@ export default {
   data: () => ({
     dialogAdd: false,
     dialogEdit: false,
+    drawer: null,
     headers: [
       { text: "Mã Ngành", value: "code" },
       {
         text: "Tên Ngành",
         align: "left",
         sortable: false,
-        value: "name"
+        value: "name",
       },
       { text: "Tên Nhóm Ngành", value: "groupName" },
       { text: "Mô Tả", value: "description" },
       {
         text: "Action",
         align: "end",
-        value: "action"
-      }
+        value: "action",
+      },
     ],
     dataNganh: [],
     dataNhomNganh: [],
@@ -165,21 +228,21 @@ export default {
       name: "",
       code: "",
       groupId: "",
-      description: ""
+      description: "",
     },
     editedItem: {
       id: "",
       name: "",
       code: "",
       groupID: "",
-      description: ""
+      description: "",
     },
     defaultItem: {
       id: "",
       name: "",
       code: "",
-      description: ""
-    }
+      description: "",
+    },
   }),
 
   created() {
@@ -192,13 +255,13 @@ export default {
       axios
         .get("http://108.160.141.154:3000/industry", {
           headers: {
-            Authorization: "Bearer " + this.$cookies.get("cookToken")
-          }
+            Authorization: "Bearer " + this.$cookies.get("cookToken"),
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.dataNganh = response.data;
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -206,18 +269,18 @@ export default {
       axios
         .get("http://108.160.141.154:3000/group", {
           headers: {
-            Authorization: "Bearer " + this.$cookies.get("cookToken")
-          }
+            Authorization: "Bearer " + this.$cookies.get("cookToken"),
+          },
         })
-        .then(response => {
-          this.dataNhomNganh = response.data.map(item => ({
+        .then((response) => {
+          this.dataNhomNganh = response.data.map((item) => ({
             text: item.name,
-            value: item.id
+            value: item.id,
           }));
           this.addedItem.groupId = response.data[0].id;
           // console.log(this.dataNhomNganh);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -227,14 +290,14 @@ export default {
         .post("http://108.160.141.154:3000/industry", this.addedItem, {
           headers: {
             Authorization: "Bearer " + this.$cookies.get("cookToken"),
-            "Content-Type": "application/json"
-          }
+            "Content-Type": "application/json",
+          },
         })
-        .then(response => {
+        .then((response) => {
           this.dataNganh.push(response.data);
           this.name = "";
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -245,14 +308,14 @@ export default {
         axios
           .delete("http://108.160.141.154:3000/industry", {
             headers: {
-              Authorization: "Bearer " + this.$cookies.get("cookToken")
+              Authorization: "Bearer " + this.$cookies.get("cookToken"),
             },
-            params: { id }
+            params: { id },
           })
           .then(() => {
-            this.dataNganh = this.dataNganh.filter(item => item.id !== id);
+            this.dataNganh = this.dataNganh.filter((item) => item.id !== id);
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           });
     },
@@ -264,13 +327,13 @@ export default {
           { name, code, groupId, description },
           {
             headers: {
-              Authorization: "Bearer " + this.$cookies.get("cookToken")
+              Authorization: "Bearer " + this.$cookies.get("cookToken"),
             },
-            params: { id }
+            params: { id },
           }
         )
-        .then(response => {
-          this.dataNganh = this.dataNganh.map(item => {
+        .then((response) => {
+          this.dataNganh = this.dataNganh.map((item) => {
             if (item.id === id) {
               return {
                 ...item,
@@ -278,13 +341,13 @@ export default {
                 code,
                 groupName: response.data.groupName,
                 groupId,
-                description
+                description,
               };
             }
             return item;
           });
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
         });
     },
@@ -310,8 +373,8 @@ export default {
         this.editedItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       }, 300);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -334,5 +397,8 @@ export default {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.linkMenu {
+  text-decoration: none;
 }
 </style>

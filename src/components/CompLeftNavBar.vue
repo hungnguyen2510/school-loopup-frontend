@@ -55,7 +55,7 @@
 
 <script>
 export default {
-  name: "comp-management",
+  name: "comp-leftnavbar",
   props: {
     source: String,
     tokenAuth: String,
