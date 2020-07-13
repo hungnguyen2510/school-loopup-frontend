@@ -1,12 +1,22 @@
 <template>
   <v-app id="inspire">
     <v-app-bar app clipped-right color="primary" dark>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon
+        @click.stop="
+          drawer = !drawer;
+          mini = !mini;
+        "
+      ></v-app-bar-nav-icon>
       <v-toolbar-title>LHU Lookup Management</v-toolbar-title>
       <v-spacer></v-spacer>
     </v-app-bar>
 
-    <v-navigation-drawer v-model="drawer" app>
+    <v-navigation-drawer
+      v-model="drawer"
+      :mini-variant.sync="mini"
+      permanent
+      app
+    >
       <v-list dense>
         <v-list-item link>
           <v-list-item-action>
@@ -35,16 +45,6 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-main class="main-content">
-      <v-container>
-        <transition>
-          <keep-alive>
-            <router-view></router-view>
-          </keep-alive>
-        </transition>
-      </v-container>
-    </v-main>
-
     <v-footer app color="primary" class="white--text">
       <span>Vuetify</span>
       <v-spacer></v-spacer>
@@ -62,7 +62,7 @@ export default {
   },
   data: () => ({
     drawer: null,
-    selectTab: 0,
+    mini: true,
   }),
   methods: {
     logout() {
@@ -70,15 +70,14 @@ export default {
       this.$cookies.remove("cookToken");
       this.$router.replace("/login");
     },
-    changeTab(tabs) {
-      this.selectTab = tabs;
-      // console.log(tabs);
-    },
   },
 };
 </script>
 <style>
 .main-content {
   padding: 0px !important;
+}
+.v-application--wrap {
+  min-height: 0px;
 }
 </style>

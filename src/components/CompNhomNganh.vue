@@ -1,43 +1,18 @@
 <template>
   <div id="app">
     <v-app id="inspire">
-      <v-app-bar app clipped-right color="primary" dark>
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-        <v-toolbar-title>LHU Lookup Management</v-toolbar-title>
-        <v-spacer></v-spacer>
-      </v-app-bar>
-      <v-navigation-drawer v-model="drawer" app>
-        <v-list dense>
-          <v-list-item link>
-            <v-list-item-action>
-              <v-icon>mdi-home</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>
-                <router-link class="linkMenu" to="/management/group"
-                  >Danh sách nhóm ngành
-                </router-link>
-              </v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item link>
-            <v-list-item-action>
-              <v-icon>mdi-email</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>
-                <router-link class="linkMenu" to="/management/industry"
-                  >Danh sách ngành
-                </router-link></v-list-item-title
-              >
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
-      </v-navigation-drawer>
+      <CompLeftNavBar></CompLeftNavBar>
       <div>
         <v-toolbar flat color="white">
           <v-toolbar-title>Thông Tin</v-toolbar-title>
           <v-divider class="mx-2" inset vertical></v-divider>
+          <v-text-field
+            v-model="search"
+            append-icon="mdi-magnify"
+            label="Tìm kiếm..."
+            single-line
+            hide-details
+          ></v-text-field>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialogAdd" max-width="500px">
             <template v-slot:activator="{ on }">
@@ -102,6 +77,8 @@
         <v-data-table
           :headers="headers"
           :items="dataNhomNganh"
+          :items-per-page="10"
+          :search="search"
           class="elevation-1"
         >
           <template v-slot:item.createdAt="props">
@@ -128,11 +105,15 @@
 </template>
 <script>
 import axios from "axios";
+import CompLeftNavBar from "./CompLeftNavBar";
 import moment from "moment";
 export default {
   name: "comp-nhomnganh",
-
+  components: {
+    CompLeftNavBar,
+  },
   data: () => ({
+    search: "",
     dialogAdd: false,
     dialogEdit: false,
     drawer: null,
