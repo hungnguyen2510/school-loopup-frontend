@@ -2,19 +2,26 @@
   <v-app id="inspire">
     <CompLeftNavBar></CompLeftNavBar>
     <v-main class="main-content">
-      <v-container></v-container>
+      <v-container>
+        <tags-ball :width="400" :height="400" :tags="tags" />
+      </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
 import CompLeftNavBar from "./CompLeftNavBar";
+import TagsBall from "vue-tags-ball";
 export default {
   name: "comp-management",
   components: {
     CompLeftNavBar,
+    "tags-ball": TagsBall,
   },
-  data: () => ({}),
+  data: () => ({
+    tags: ["html", "test2", "test3", "test4", "test5", "test6"],
+  }),
+  methods: {},
 };
 </script>
 <style>

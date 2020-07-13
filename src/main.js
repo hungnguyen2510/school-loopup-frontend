@@ -3,8 +3,10 @@ import App from "./App.vue";
 import router from "./router";
 import vuetify from "./plugins/vuetify";
 import VueCookies from "vue-cookies";
+import TagsBall from "vue-tags-ball";
 
 Vue.use(VueCookies);
+Vue.use(TagsBall);
 Vue.config.productionTip = false;
 Vue.filter("truncate", function(value, limit) {
   if (value.length > limit) {
