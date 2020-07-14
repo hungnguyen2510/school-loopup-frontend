@@ -52,9 +52,10 @@ export default {
     handleSearch(data) {
       this.txtSearch = data;
       // console.log("changeTxtSearch", this.txtSearch);
+      this.Search();
     },
     Search() {
-      console.log(this.txtSearch);
+      console.log("search: ", this.txtSearch);
     },
   },
 };
