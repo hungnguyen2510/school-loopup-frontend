@@ -278,7 +278,6 @@ export default {
         })
         .then((response) => {
           this.dataNganh.push(response.data);
-          this.name = "";
         })
         .catch((error) => {
           console.log(error);
