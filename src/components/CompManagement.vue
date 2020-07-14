@@ -11,7 +11,7 @@
 
 <script>
 import CompLeftNavBar from "./CompLeftNavBar";
-import TagsBall from "vue-tags-ball";
+import TagsBall from "./TagsBall";
 export default {
   name: "comp-management",
   components: {
