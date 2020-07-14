@@ -7,7 +7,7 @@
 <style scoped>
 #tags_ball {
   border-radius: 20px;
-  border: 2px solid #66ccff;
+  /* border: 2px solid #66ccff; */
 }
 </style>
 
@@ -27,10 +27,12 @@ export default {
   },
   data() {
     return {
+      selectItem: "",
       animation: new Animation(),
     };
   },
   props: {
+    // handleSearch: Function,
     stop: {
       type: Boolean,
       default: false,
@@ -48,7 +50,7 @@ export default {
     },
     radius: {
       type: Number,
-      default: 100,
+      default: 80,
     },
     fontMax: {
       type: Number,
@@ -56,7 +58,7 @@ export default {
     },
     font: {
       type: String,
-      default: "24px monaco",
+      default: "40px monaco",
     },
     color: {
       tupe: String,
@@ -187,7 +189,7 @@ export default {
         }
       }
 
-      let init = function() {
+      let init = () => {
         for (let i = 0; i < points.length; i++) {
           let t = ctx.measureText(tags[i]);
           labels.push(
@@ -201,7 +203,7 @@ export default {
             )
           );
         }
-        canvas.addEventListener("click", function(event) {
+        canvas.addEventListener("click", (event) => {
           let x = event.layerX - hx;
           let y = event.layerY - hy;
 
@@ -209,8 +211,13 @@ export default {
           angleX = -y * 0.0001;
 
           labels.forEach((element) => {
-            if (Math.abs(element.x - x) < 10 && Math.abs(element.y - y) < 10) {
-              console.log(element.str);
+            if (
+              Math.abs(element.x - x) <= 10 &&
+              Math.abs(element.y - y) <= 10
+            ) {
+              this.$emit("changeTxtSearch", element.str);
+              // this.handleSearch(element.str);
+              // console.log(this.selectItem);
             }
           });
         });
