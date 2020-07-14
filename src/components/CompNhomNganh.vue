@@ -152,7 +152,7 @@ export default {
   methods: {
     initialize() {
       axios
-        .get("http://108.160.141.154:3000/group", {
+        .get("https://api.trongnc.com:3001/group", {
           headers: {
             Authorization: "Bearer " + this.$cookies.get("cookToken"),
           },
@@ -169,7 +169,7 @@ export default {
     addItem() {
       axios
         .post(
-          "http://108.160.141.154:3000/group",
+          "https://api.trongnc.com:3001/group",
           { name: this.addedItem.name },
           {
             headers: {
@@ -189,7 +189,7 @@ export default {
       // console.log(id);
       confirm("Bạn có muốn xóa ngành?" + " " + name) &&
         axios
-          .delete("http://108.160.141.154:3000/group", {
+          .delete("https://api.trongnc.com:3001/group", {
             headers: {
               Authorization: "Bearer " + this.$cookies.get("cookToken"),
             },
@@ -208,7 +208,7 @@ export default {
     editItem(id, name) {
       axios
         .put(
-          "http://108.160.141.154:3000/group",
+          "https://api.trongnc.com:3001/group",
           { name },
           {
             headers: {

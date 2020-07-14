@@ -6,7 +6,7 @@
           <v-col cols="12" sm="8" md="4">
             <v-card class="elevation-12">
               <v-toolbar color="primary" dark flat>
-                <v-toolbar-title>{{titleForm}}</v-toolbar-title>
+                <v-toolbar-title>{{ titleForm }}</v-toolbar-title>
               </v-toolbar>
               <v-card-text>
                 <v-form>
@@ -28,14 +28,22 @@
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-alert v-if="checkedErros" type="error" transition="scale-transition">{{errors}}</v-alert>
+                <v-alert
+                  v-if="checkedErros"
+                  type="error"
+                  transition="scale-transition"
+                  >{{ errors }}</v-alert
+                >
                 <v-spacer></v-spacer>
                 <!-- <v-btn v-on:click="Login" color="primary">Login</v-btn> -->
                 <v-btn
                   v-on:click="login"
                   class="ma-2"
                   color="info"
-                  @click="loader = 'loading4'; overlay = !overlay"
+                  @click="
+                    loader = 'loading4';
+                    overlay = !overlay;
+                  "
                 >
                   Đăng Nhập
                   <template v-slot:loader>
@@ -67,7 +75,7 @@ export default {
       password: "",
       tokenAuth: "",
       errors: "",
-      checkedErros: false
+      checkedErros: false,
     };
   },
   watch: {
@@ -76,7 +84,7 @@ export default {
         setTimeout(() => {
           this.overlay = false;
         }, 3000);
-    }
+    },
   },
   methods: {
     login() {
@@ -89,21 +97,21 @@ export default {
       } else {
         axios
           .post(
-            "http://108.160.141.154:3000/user/login",
+            "https://api.trongnc.com:3001/user/login",
             { username, password },
             {
               headers: {
-                "Content-Type": "application/json"
-              }
+                "Content-Type": "application/json",
+              },
             }
           )
-          .then(result => {
+          .then((result) => {
             this.tokenAuth = result.data.token;
             // console.log(this.tokenAuth);
             this.$cookies.set("cookToken", this.tokenAuth);
             this.$router.replace("/management");
           })
-          .catch(error => {
+          .catch((error) => {
             const message =
               (error &&
                 error.response &&
@@ -118,11 +126,11 @@ export default {
             }, 10000);
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>
-<style >
+<style>
 /* .custom-loader {
   animation: loader 1s infinite;
   display: flex;

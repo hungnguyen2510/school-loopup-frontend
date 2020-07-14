@@ -6,7 +6,7 @@
           <v-col cols="12" sm="8" md="4">
             <v-card class="elevation-12">
               <v-toolbar color="primary" dark flat>
-                <v-toolbar-title>{{titleForm}}</v-toolbar-title>
+                <v-toolbar-title>{{ titleForm }}</v-toolbar-title>
               </v-toolbar>
               <v-card-text>
                 <v-form>
@@ -55,7 +55,7 @@ export default {
     return {
       titleForm: "Đăng Ký",
       username: "",
-      password: ""
+      password: "",
     };
   },
   methods: {
@@ -68,20 +68,20 @@ export default {
       } else {
         axios
           .post(
-            "http://108.160.141.154:3000/user/login",
+            "https://api.trongnc.com:3001/user/login",
             { username, password },
             {
               headers: {
-                "Content-Type": "application/json"
-              }
+                "Content-Type": "application/json",
+              },
             }
           )
-          .then(result => console.log(result.data.token))
-          .catch(error => {
+          .then((result) => console.log(result.data.token))
+          .catch((error) => {
             console.log(error);
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>

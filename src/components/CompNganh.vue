@@ -236,7 +236,7 @@ export default {
   methods: {
     initialize() {
       axios
-        .get("http://108.160.141.154:3000/industry", {
+        .get("https://api.trongnc.com:3001/industry", {
           headers: {
             Authorization: "Bearer " + this.$cookies.get("cookToken"),
           },
@@ -250,7 +250,7 @@ export default {
     },
     getThongTinNhomNganh() {
       axios
-        .get("http://108.160.141.154:3000/group", {
+        .get("https://api.trongnc.com:3001/group", {
           headers: {
             Authorization: "Bearer " + this.$cookies.get("cookToken"),
           },
@@ -270,7 +270,7 @@ export default {
     addItem() {
       // console.log(this.addedItem);
       axios
-        .post("http://108.160.141.154:3000/industry", this.addedItem, {
+        .post("https://api.trongnc.com:3001/industry", this.addedItem, {
           headers: {
             Authorization: "Bearer " + this.$cookies.get("cookToken"),
             "Content-Type": "application/json",
@@ -288,7 +288,7 @@ export default {
       // const index = this.dataNganh.indexOf(item);
       confirm("Bạn có muốn xóa ngành?" + " " + name) &&
         axios
-          .delete("http://108.160.141.154:3000/industry", {
+          .delete("https://api.trongnc.com:3001/industry", {
             headers: {
               Authorization: "Bearer " + this.$cookies.get("cookToken"),
             },
@@ -305,7 +305,7 @@ export default {
       // console.log(id, groupID, code, name, description);
       axios
         .put(
-          "http://108.160.141.154:3000/industry",
+          "https://api.trongnc.com:3001/industry",
           { name, code, groupId, description },
           {
             headers: {

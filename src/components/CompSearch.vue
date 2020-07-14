@@ -33,21 +33,12 @@ export default {
   name: "comp-search",
   data() {
     return {
-      tags: [
-        "test1",
-        "test2",
-        "test3",
-        "test4",
-        "test5",
-        "test7",
-        "test8",
-        "test9",
-        "test10",
-      ],
+      tags: [],
       txtSearch: "",
     };
   },
   components: { "tags-ball": TagsBall },
+  // beforeCreate() {},
   methods: {
     handleSearch(data) {
       this.txtSearch = data;
@@ -57,7 +48,23 @@ export default {
     Search() {
       console.log("search: ", this.txtSearch);
     },
-  },
+  //   getData() {
+  //     axios
+  //       .get("https://api.trongnc.com:3001/group", {
+  //         headers: {
+  //           Authorization: "Bearer " + this.$cookies.get("cookToken"),
+  //         },
+  //       })
+  //       .then((response) => {
+  //         this.tags = response.data;
+  //         // console.log(this.$cookies.get("cookToken"));
+  //         // console.log(this.groups);
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   },
+  // },
 };
 </script>
 
