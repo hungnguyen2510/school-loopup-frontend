@@ -48,23 +48,23 @@ export default {
     Search() {
       console.log("search: ", this.txtSearch);
     },
-  //   getData() {
-  //     axios
-  //       .get("https://api.trongnc.com:3001/group", {
-  //         headers: {
-  //           Authorization: "Bearer " + this.$cookies.get("cookToken"),
-  //         },
-  //       })
-  //       .then((response) => {
-  //         this.tags = response.data;
-  //         // console.log(this.$cookies.get("cookToken"));
-  //         // console.log(this.groups);
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   },
-  // },
+    //   getData() {
+    //     axios
+    //       .get("https://api.trongnc.com:3001/group", {
+    //         headers: {
+    //           Authorization: "Bearer " + this.$cookies.get("cookToken"),
+    //         },
+    //       })
+    //       .then((response) => {
+    //         this.tags = response.data;
+    //         // console.log(this.$cookies.get("cookToken"));
+    //         // console.log(this.groups);
+    //       })
+    //       .catch((error) => {
+    //         console.log(error);
+    //       });
+    //   },
+  },
 };
 </script>
 
