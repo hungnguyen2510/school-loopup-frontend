@@ -22,25 +22,25 @@ const router = new Router({
       path: "/management", ///path của route
       name: "CompManagement", // tên route
       component: CompManagement, // component route sử dụng
-      meta: {
-        requiresAuth: true,
-      },
+      // meta: {
+      //   requiresAuth: true,
+      // },
     },
     {
       path: "/management/group", ///path của route
       name: "CompNhomNganh", // tên route
       component: CompNhomNganh, // component route sử dụng
-      meta: {
-        requiresAuth: true,
-      },
+      // meta: {
+      //   requiresAuth: true,
+      // },
     },
     {
       path: "/management/industry", ///path của route
       name: "CompNganh", // tên route
       component: CompNganh, // component route sử dụng
-      meta: {
-        requiresAuth: true,
-      },
+      // meta: {
+      //   requiresAuth: true,
+      // },
     },
     {
       path: "/login", ///path của route
